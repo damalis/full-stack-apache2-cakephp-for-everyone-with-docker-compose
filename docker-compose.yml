@@ -37,7 +37,7 @@ services:
 
     webserver:
         depends_on:
-            - wordpress
+            - cakephp
         image: 'httpd:latest'
         container_name: webserver
         networks:
@@ -63,7 +63,7 @@ services:
             - '443:443'
             - '81:81'
         links:
-            - wordpress
+            - cakephp
         environment:
             TZ: '${LOCAL_TIMEZONE}'
         labels:            
