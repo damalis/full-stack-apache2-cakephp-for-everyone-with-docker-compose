@@ -4,7 +4,7 @@ clear
 echo ""
 echo "======================================================================="
 echo "|                                                                     |"
-echo "|     full-stack-nginx-cakephp-for-everyone-with-docker-compose       |"
+echo "|     full-stack-apache2-cakephp-for-everyone-with-docker-compose       |"
 echo "|                         by Erdal ALTIN                              |"
 echo "|                                                                     |"
 echo "======================================================================="
@@ -250,8 +250,8 @@ if [ -x "$(command -v docker)" ] && [ -x "$(command -v docker-compose)" ]; then
 				if [ ! -z `docker ps -q -f "status=running" --no-trunc | grep $(docker-compose ps -q webserver)` ]; then break; fi
 			done			
 			echo ""
-			echo "Reloading Nginx ssl configuration"
-			docker exec webserver nginx -s reload > /dev/null 2>&1
+			echo "Reloading Apache2 ssl configuration"
+			docker exec webserver httpd -k restart > /dev/null 2>&1
 			echo "Ok."
 			echo ""
 			echo "completed setup"
