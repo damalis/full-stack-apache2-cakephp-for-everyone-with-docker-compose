@@ -67,7 +67,6 @@ services:
         ports:
             - '80:80'
             - '443:443'
-            - '81:81'
         links:
             - cakephp
         environment:
