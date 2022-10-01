@@ -80,7 +80,7 @@ Open a terminal and `cd` to the folder in which `docker-compose.yml` is saved an
 cd full-stack-apache2-cakephp-for-everyone-with-docker-compose
 ```
 
-### Manual Configuration
+### Manual
 
 Copy the example environment into `.env`
 
