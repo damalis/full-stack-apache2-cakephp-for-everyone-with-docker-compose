@@ -62,7 +62,7 @@ services:
               target: '/tmp/ssl-conf.sh'
             - 'certbot-etc:${LETSENCRYPT_CONF_PREFIX}'
             - '/tmp/acme-challenge:/tmp/acme-challenge'
-        hostname: webserver        
+        hostname: webserver
         restart: unless-stopped
         ports:
             - '80:80'
