@@ -232,9 +232,9 @@ add and/or remove cakephp site folders and files with any ftp client program in 
 
 #### Webserver
 
-add or remove code in the ```./webserver/extra/httpd-ssl.conf``` file for custom nginx configurations
+add or remove code in the ```./webserver/extra/httpd-vhosts.conf``` file for custom apache2/httpd configurations
 
-[https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/](https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/)
+[https://httpd.apache.org/docs/2.4/](https://httpd.apache.org/docs/2.4/)
 
 #### Redis
 
