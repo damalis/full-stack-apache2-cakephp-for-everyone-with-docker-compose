@@ -251,7 +251,7 @@ if [ -x "$(command -v docker)" ] && [ "$(docker compose version)" ]; then
 			done			
 			echo ""
 			echo "Reloading webserver ssl configuration"
-            docker container restart webserver > /dev/null 2>&1
+			docker container restart webserver > /dev/null 2>&1
             echo "Ok."
 			echo ""
 			echo "completed setup"
