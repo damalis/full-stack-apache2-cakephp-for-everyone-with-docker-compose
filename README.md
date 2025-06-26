@@ -308,10 +308,12 @@ add or remove code in the ```./webserver/extra/httpd-ssl.conf``` file for custom
 
 see [Redis Cache](https://book.cakephp.org/5/en/core-libraries/caching.html#redisengine-options) options and must add below code to config file.
 
+modify redis cache configuration values in the ```./cakephp/config/app_local.php``` file.
+
 ```
 	/**
-	 * Configure the cache adapters.
-	 */
+	* Configure the cache adapters.
+	*/
 	'Cache' => [
 		'default' => [
 			'className' => 'Redis',
@@ -322,9 +324,9 @@ see [Redis Cache](https://book.cakephp.org/5/en/core-libraries/caching.html#redi
 		],
 
 		/**
-		 * Configure the cache used for general framework caching.
-		 * Translation cache files are stored with this configuration.
-		 */
+		* Configure the cache used for general framework caching.
+		* Translation cache files are stored with this configuration.
+		*/
 		'_cake_core_' => [
 			'className' => 'Redis',
 			'prefix' => 'myapp_cake_core_',
@@ -354,11 +356,13 @@ see [Redis Cache](https://book.cakephp.org/5/en/core-libraries/caching.html#redi
 	],
 ```
 
-modify redis cache configuration values in the ```./cakephp/config/app_local.php``` file.
-
 ### DebugKit
 
 [book.cakephp.org/debugkit/5/en/index.html#configuration](https://book.cakephp.org/debugkit/5/en/index.html#configuration)
+
+If debugkit not showing and get error "This request has been blocked; the content must be served over HTTPS"
+
+add code snippet ```<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">``` in the ```./cakephp/templates/Pages/home.php``` file.
 
 ### phpMyAdmin
 
