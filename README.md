@@ -3,7 +3,7 @@
 If You want to build a website with CakePHP at short time; 
 
 #### Full stack Apache2 CakePHP:
-<div style="display: flex;">
+<div style="display: flex; justify-content: space-around;">
 <div style="max-width:12%"><a href="https://www.cakephp.com/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/23666?s=200&v=4" alt="cakephp"/> </a></div>
 <div style="max-width:12%"><a href="https://www.docker.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/docker/docker.png" alt="docker" /> </a></div>
 <div style="max-width:12%"><a href="https://mariadb.org/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/5877084?s=200&v=4" alt="mariadb" /> </a></div>
