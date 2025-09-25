@@ -4,20 +4,20 @@ If You want to build a website with CakePHP at short time;
 
 #### Full stack Apache2 CakePHP:
 <div style="display: flex;">
-<div style="flex:1"><a href="https://www.cakephp.com/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/23666?s=200&v=4" alt="cakephp"/> </a></div>
-<div style="flex:1"><a href="https://www.docker.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/docker/docker.png" alt="docker" /> </a></div>
-<div style="flex:1"><a href="https://mariadb.org/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/5877084?s=200&v=4" alt="mariadb" /> </a></div>
-<div style="flex:1"><a href="https://dev.mysql.com/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/2452804?s=200&v=4" alt="mysql" /> </a></div>
-<div style="flex:1"><a href="https://www.apache.org/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/47359?s=200&v=4" alt="apache2" /> </a></div>
-<div style="flex:1"><a href="https://www.php.net" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/25158?s=200&v=4" alt="php" /> </a></div>
-<div style="flex:1"><a href="https://redis.io" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/1529926?s=200&v=4" alt="redis" /> </a></div>
-<div style="flex:1"><a href="https://www.phpmyadmin.net/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/1351977?s=200&v=4" alt="phpmyadmin" /> </a></div>
-<div style="flex:1"><a href="https://letsencrypt.org/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/17889013?s=200&v=4" alt="letsencrypt" /> </a></div>
-<div style="flex:1"><a href="https://certbot.eff.org/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/17889013?s=200&v=4" alt="certbot" /> </a></div>
-<div style="flex:1"><a href="https://www.portainer.io/?hsLang=en" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/22225832?s=200&v=4" alt="portainer" /> </a></div>
-<div style="flex:1"><a href="https://docs.docker.com/compose/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/docker/compose/v2/logo.png" alt="docker compose" width="40" /> </a></div>
-<div style="flex:1"><a href="https://www.gnu.org/software/bash/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/bash/bash.png" alt="Bash"  /> </a></div>
-<div style="flex:1"><a href="https://www.offen.dev/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/47735043?s=200&v=4" alt="backup" height="35" width="35"/> </a></div>
+<div style="max-width:12%"><a href="https://www.cakephp.com/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/23666?s=200&v=4" alt="cakephp"/> </a></div>
+<div style="max-width:12%"><a href="https://www.docker.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/docker/docker.png" alt="docker" /> </a></div>
+<div style="max-width:12%"><a href="https://mariadb.org/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/5877084?s=200&v=4" alt="mariadb" /> </a></div>
+<div style="max-width:12%"><a href="https://dev.mysql.com/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/2452804?s=200&v=4" alt="mysql" /> </a></div>
+<div style="max-width:12%"><a href="https://www.apache.org/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/47359?s=200&v=4" alt="apache2" /> </a></div>
+<div style="max-width:12%"><a href="https://www.php.net" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/25158?s=200&v=4" alt="php" /> </a></div>
+<div style="max-width:12%"><a href="https://redis.io" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/1529926?s=200&v=4" alt="redis" /> </a></div>
+<div style="max-width:12%"><a href="https://www.phpmyadmin.net/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/1351977?s=200&v=4" alt="phpmyadmin" /> </a></div>
+<div style="max-width:12%"><a href="https://letsencrypt.org/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/17889013?s=200&v=4" alt="letsencrypt" /> </a></div>
+<div style="max-width:12%"><a href="https://certbot.eff.org/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/17889013?s=200&v=4" alt="certbot" /> </a></div>
+<div style="max-width:12%"><a href="https://www.portainer.io/?hsLang=en" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/22225832?s=200&v=4" alt="portainer" /> </a></div>
+<div style="max-width:12%"><a href="https://docs.docker.com/compose/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/docker/compose/v2/logo.png" alt="docker compose" width="40" /> </a></div>
+<div style="max-width:12%"><a href="https://www.gnu.org/software/bash/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/bash/bash.png" alt="Bash"  /> </a></div>
+<div style="max-width:12%"><a href="https://www.offen.dev/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/47735043?s=200&v=4" alt="backup" height="35" width="35"/> </a></div>
 </div>
 
 Plus, manage docker containers with Portainer.
