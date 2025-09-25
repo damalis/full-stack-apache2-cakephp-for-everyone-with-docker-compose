@@ -298,14 +298,17 @@ if [ "$which_h" == "localhost" ]
 then
 	read -p 'Enter Domain Name(default : localhost or e.g. : example.com): ' domain_name
 	: ${domain_name:=localhost}
-	[ "$domain_name" != "localhost" ] && sudo -- sh -c -e "grep -qxF '127.0.0.1  $domain_name' /etc/hosts || echo '127.0.0.1  $domain_name' >> /etc/hosts"
+	[ "$domain_name" != "localhost" ] && sudo -- sh -c -e "grep -qxF '127.0.1.1  $domain_name' /etc/hosts || echo '127.0.1.1  $domain_name' >> /etc/hosts"
+	ping -c 1 $domain_name 2>&1 > /dev/null
 else
 	domain_name=""
 	read -p 'Enter Domain Name(e.g. : example.com): ' domain_name
 	#[ "$domain_name" != "localhost" ] && sudo -- sh -c -e "sed -i '/$domain_name/d' /etc/hosts"
+	[ -z $domain_name ] && domain_name="NULL"
+	host -N 0 $domain_name 2>&1 > /dev/null
 fi
-[ -z $domain_name ] && domain_name="NULL"
-host -N 0 $domain_name 2>&1 > /dev/null
+#[ -z $domain_name ] && domain_name="NULL"
+#host -N 0 $domain_name 2>&1 > /dev/null
 while [ $? -ne 0 ]
 do
 	echo "Try again"
@@ -314,13 +317,16 @@ do
 	then
 		read -p 'Enter Domain Name(default : localhost or e.g. : example.com): ' domain_name
 		: ${domain_name:=localhost}
-		[ "$domain_name" != "localhost" ] && sudo -- sh -c -e "grep -qxF '127.0.0.1  $domain_name' /etc/hosts || echo '127.0.0.1  $domain_name' >> /etc/hosts"
+		[ "$domain_name" != "localhost" ] && sudo -- sh -c -e "grep -qxF '127.0.1.1  $domain_name' /etc/hosts || echo '127.0.1.1  $domain_name' >> /etc/hosts"
+		ping -c 1 $domain_name 2>&1 > /dev/null
 	else
 		read -p 'Enter Domain Name(e.g. : example.com): ' domain_name
 		#[ "$domain_name" != "localhost" ] && sudo -- sh -c -e "sed -i '/$domain_name/d' /etc/hosts"
+		[ -z $domain_name ] && domain_name="NULL"
+		host -N 0 $domain_name 2>&1 > /dev/null
 	fi
-	[ -z $domain_name ] && domain_name="NULL"
-	host -N 0 $domain_name 2>&1 > /dev/null
+	#[ -z $domain_name ] && domain_name="NULL"
+	#host -N 0 $domain_name 2>&1 > /dev/null
 done
 echo "Ok."
 
