@@ -64,8 +64,10 @@ Create rules to open ports to the internet, or to a specific IPv4 address or ran
 #### Contents:
 
 - [Auto Configuration and Installation](#automatic)
-- [Requirements](#requirements)
 - [Manual Configuration and Installation](#manual)
+	- [Requirements](#requirements)
+	- [Configuration](#configuration)
+	- [Installation](#installation)
 - [Portainer Installation](#portainer)
 - [Usage](#usage)
 	- [Website](#website)
@@ -75,9 +77,9 @@ Create rules to open ports to the internet, or to a specific IPv4 address or ran
 	- [phpMyAdmin](#phpmyadmin)
 	- [backup](#backup)
 
-## Automatic
+### Automatic
 
-### Exec install shell script for auto installation and configuration
+#### Exec install shell script for auto installation and configuration
 
 download with
 
@@ -93,7 +95,9 @@ chmod +x install.sh
 ./install.sh
 ```
 
-## Requirements
+### Manual
+
+#### Requirements
 
 Make sure you have the latest versions of **Docker** and **Docker Compose** installed on your machine and require up to 2 GB of RAM.
 
@@ -104,9 +108,7 @@ Clone this repository or copy the files from this repository into a new folder.
 
 Make sure to [add your user to the `docker` group](https://docs.docker.com/install/linux/linux-postinstall/#manage-docker-as-a-non-root-user).
 
-## Manual
-
-### Configuration
+#### Configuration
 
 download with
 
@@ -126,31 +128,86 @@ Copy the example environment into `.env`
 cp env.example .env
 ```
 
-Edit the `.env` file to change values of ```LOCAL_TIMEZONE```, ```DOMAIN_NAME```, ```DIRECTORY_PATH```, ```LETSENCRYPT_EMAIL```, ```DB_USER```, ```DB_PASSWORD```, ```DB_NAME```, ```MYSQL_ROOT_PASSWORD```, ```DATABASE_IMAGE_NAME```, ```DATABASE_CONT_NAME```, ```DATABASE_PACKAGE_MANAGER```, ```DATABASE_ADMIN_COMMANDLINE```, ```PMA_CONTROLUSER```, ```PMA_CONTROLPASS```, ```PMA_HTPASSWD_USERNAME```, ```PMA_HTPASSWD_PASSWORD``` and ```SSL_SNIPPET```.
+Edit the `.env` file to change values of
 
-LOCAL_TIMEZONE=[to see local timezones](https://docs.diladele.com/docker/timezones.html)
+|```LOCAL_TIMEZONE```|```SUBDOMAIN```|```DOMAIN_NAME```|```DIRECTORY_PATH```|```LETSENCRYPT_EMAIL```|
+|```DB_USER```|```DB_PASSWORD```|```DB_NAME```|```MYSQL_ROOT_PASSWORD```|```DATABASE_IMAGE_NAME```|
+|```DATABASE_CONT_NAME```|```DATABASE_PACKAGE_MANAGER```|```DATABASE_ADMIN_COMMANDLINE```|```PMA_CONTROLUSER```|```PMA_CONTROLPASS```|
+|```PMA_HTPASSWD_USERNAME```|```PMA_HTPASSWD_PASSWORD```|```SSL_SNIPPET```|
 
-DIRECTORY_PATH=```pwd``` at command line\
-DATABASE_IMAGE_NAME=```mariadb``` or ```mysql```\
-DATABASE_CONT_NAME=```mariadb```, ```mysql``` or ```custom name```\
-DATABASE_PACKAGE_MANAGER=```apt-get update && apt-get install -y gettext-base``` for mariadb, ```microdnf install -y gettext``` for mysql\
-DATABASE_ADMIN_COMMANDLINE=```mariadb-admin``` for mariadb, ```mysqladmin``` for mysql\
-SSL_SNIPPET=```echo 'Generated Self-signed SSL Certificate at localhost'``` for localhost\
-SSL_SNIPPET=```certbot certonly --webroot --webroot-path /tmp/acme-challenge --rsa-key-size 4096 --non-interactive --agree-tos --no-eff-email --force-renewal --email ${LETSENCRYPT_EMAIL} -d ${DOMAIN_NAME} -d www.${DOMAIN_NAME}``` for remotehost
+<table><thead>
+  <tr>
+    <th>Variable </th>
+    <th colspan="2">Value</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td><code>LOCAL_TIMEZONE</code></td>
+    <td colspan="2"><code><a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List" rel="nofollow">to see local timezones</a></code></td>
+  </tr>
+  <tr>
+    <td><code>DIRECTORY_PATH</code></td>
+    <td colspan="2"><code>pwd</code> at command line</td>
+  </tr>
+  <tr>
+    <td><code>DATABASE_IMAGE_NAME</code></td>
+    <td colspan="2"><code>mariadb</code> or <code>mysql</code></td>
+  </tr>
+  <tr>
+    <td><code>DATABASE_CONT_NAME</code></td>
+    <td colspan="2"><code>mariadb</code>, <code>mysql</code> or <code>custom name</code></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><code>DATABASE_PACKAGE_MANAGER</code></td>
+    <td>mariadb</td>
+    <td><code>apt-get update && apt-get install -y gettext-base</code></td>
+  </tr>
+  <tr>
+    <td>mysql</td>
+    <td><code>microdnf install -y gettext</code></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><code>DATABASE_ADMIN_COMMANDLINE</code></td>
+    <td>mariadb</td>
+    <td><code>mariadb-admin</code></td>
+  </tr>
+  <tr>
+    <td>mysql</td>
+    <td><code>mysqladmin</code></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><code>SSL_SNIPPET</code></td>
+    <td>localhost</td>
+    <td><code>echo 'Generated Self-signed SSL Certificate at localhost'</code></td>
+  </tr>
+  <tr>
+    <td>remotehost</td>
+    <td><code>certbot certonly --webroot --webroot-path /tmp/acme-challenge --rsa-key-size 4096 --non-interactive --agree-tos --no-eff-email --force-renewal --email ${LETSENCRYPT_EMAIL} -d ${DOMAIN_NAME} -d www.${DOMAIN_NAME} -d ${SUBDOMAIN}.${DOMAIN_NAME}</code></td>
+  </tr>
+</tbody>
+</table>
 
 and
 
 ```
+cp ./webserver/extra/httpd-ssl.conf.template ./webserver/extra/httpd-ssl.conf
+```
+
+change example.com to your domain name in ```./webserver/extra/httpd-ssl.conf``` file.
+
+```
 cp ./phpmyadmin/apache2/sites-available/default-ssl.sample.conf ./phpmyadmin/apache2/sites-available/default-ssl.conf
 ```
+
 change example.com to your domain name in ```./phpmyadmin/apache2/sites-available/default-ssl.conf``` file.
 
 ```
 cp ./database/phpmyadmin/sql/create_tables.sql.template.example ./database/phpmyadmin/sql/create_tables.sql.template
 ```
+
 change pma_controluser and db_authentication_password in ```./database/phpmyadmin/sql/create_tables.sql.template``` file.
 
-### Installation
+#### Installation
 
 Firstly: will create external volume
 
@@ -158,23 +215,23 @@ Firstly: will create external volume
 docker volume create --driver local --opt type=none --opt device=${PWD}/certbot --opt o=bind certbot-etc
 ```
 
-for localhost ssl: Generate Self-signed SSL Certificate with guide [mkcert repository](https://github.com/FiloSottile/mkcert).
+Localhost ssl: Generate Self-signed SSL Certificate with guide [mkcert repository](https://github.com/FiloSottile/mkcert).
 
 ```
-docker compose up -d
+docker compose up -d	# Starts services in detached mode (in the background)
 ```
 
-then reloading for webserver ssl configuration
+then
 
 ```
-docker container restart webserver
+docker container restart webserver	# reloading for webserver ssl configuration
 ```
 
 The containers are now built and running. You should be able to access the CakePHP installation with the configured IP in the browser address. `https://example.com`.
 
 For convenience you may add a new entry into your hosts file.
 
-## Portainer
+### Portainer
 
 ```
 docker compose -f portainer-docker-compose.yml -p portainer up -d 
@@ -184,99 +241,69 @@ manage docker with [Portainer](https://www.portainer.io/) is the definitive cont
 
 You can also visit `https://example.com:9001` to access portainer after starting the containers.
 
-## Usage
+### Usage
 
 #### You could manage docker containers without command line with portainer.
 
-### Show both running and stopped containers
-
-The docker ps command only shows running containers by default. To see all containers, use the -a (or --all) flag:
+#### Here’s a quick reference of commonly used Docker Compose commands
 
 ```
-docker ps -a
+docker ps -a	# Lists all containers managed by the compose file
 ```
 
-### Starting containers
-
-You can start the containers with the `up` command in daemon mode (by adding `-d` as an argument) or by using the `start` command:
-
 ```
-docker compose start
+docker compose start	# Starts previously stopped containers
 ```
 
-### Stopping containers
-
 ```
-docker compose stop
+docker compose stop	# Stops all running containers
 ```
 
-### Removing containers
-
-To stop and remove all the containers use the `down` command:
-
 ```
-docker compose down
+docker compose down	# Stops and removes containers, networks, etc.
 ```
 
-to remove portainer and the other containers:
-
 ```
-docker rm -f $(docker ps -a -q)
+docker compose down -v # Add --volumes to remove volumes explicitly
 ```
 
-Use `-v` if you need to remove the database volume which is used to persist the database:
-
 ```
-docker compose down -v
+docker rm -f $(docker ps -a -q)	# Removes portainer and the other containers
 ```
 
-to remove external certbot-etc and portainer and the other volumes:
-
 ```
-docker volume rm $(docker volume ls -q)
+docker volume rm $(docker volume ls -q)	# Removes all volumes
 ```
 
-Delete all images, containers, volumes, and networks that are not associated with a container (dangling):
-
 ```
-docker system prune
+docker system prune	# Removes unused data (containers, networks, images, and optionally volumes)
 ```
 
-To additionally remove any stopped containers and all unused images (not just dangling ones), add the -a flag to the command:
-
 ```
-docker system prune -a
+docker system prune -a	# Removes all unused images, not just dangling ones
 ```
 
-to remove portainer and the other images:
-
 ```
-docker rmi $(docker image ls -q)
+docker rmi $(docker image ls -q)	# Removes portainer and the other images
 ```
 
-### Logs containers
-
-To fetch the logs of a container.
-
 ```
-docker container logs container_name_or_id
+docker container logs container_name_or_id	# Shows logs from all services
 ```
 
-### Project from existing source
+#### Project from existing source
 
 Copy all files into a new directory:
 
-You can now use the `up` command:
-
 ```
-docker compose up -d
+docker compose up -d	# Starts services in detached mode (in the background)
 ```
 
-### Docker run reference
+#### Docker run reference
 
-[https://docs.docker.com/engine/reference/run/](https://docs.docker.com/engine/reference/run/)
+[https://docs.docker.com/reference/cli/docker/compose/](https://docs.docker.com/reference/cli/docker/compose/)
 
-### Website
+#### Website
 
 You should see the "Welcome to CakePHP..." page in your browser. If not, please check if your PHP installation satisfies CakePHP's requirements.
 
@@ -357,7 +384,7 @@ modify redis cache configuration values in the ```./cakephp/config/app_local.php
 	],
 ```
 
-### DebugKit
+#### DebugKit
 
 [book.cakephp.org/debugkit/5/en/index.html#configuration](https://book.cakephp.org/debugkit/5/en/index.html#configuration)
 
@@ -365,7 +392,7 @@ If debugkit not showing and get error "This request has been blocked; the conten
 
 add code snippet ```<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">``` in the ```./cakephp/templates/Pages/home.php``` file.
 
-### phpMyAdmin
+#### phpMyAdmin
 
 You can add your own custom config.inc.php settings (such as Configuration Storage setup) by creating a file named config.user.inc.php with the various user defined settings in it, and then linking it into the container using:
 
@@ -377,10 +404,10 @@ You can also visit `https://example.com:9090` to access phpMyAdmin after startin
 
 The first authorize screen(htpasswd;username or password) and phpmyadmin login screen the username and the password is the same as supplied in the `.env` file.
 
-### backup
+#### backup
 
 This will back up the all files and folders in database/dump sql and html volumes, once per day, and write it to ./backups with a filename like backup-2023-01-01T10-18-00.tar.gz
 
-#### can run on a custom cron schedule
+##### can run on a custom cron schedule
 
 ```BACKUP_CRON_EXPRESSION: '20 01 * * *'``` the UTC timezone.
