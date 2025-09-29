@@ -278,6 +278,10 @@ docker volume rm $(docker volume ls -q)	# Removes all volumes
 ```
 
 ```
+docker network prune	# Remove all unused networks
+```
+
+```
 docker system prune	# Removes unused data (containers, networks, images, and optionally volumes)
 ```
 
