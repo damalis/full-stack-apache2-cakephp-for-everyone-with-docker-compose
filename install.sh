@@ -525,7 +525,7 @@ if [ -x "$(command -v docker)" ] && [ "$(docker compose version)" ]; then
 		else
 			echo ""
 			until [ -n "$(sudo find ./certbot/live -name '$domain_name' 2>/dev/null | head -1)" ]; do
-				echo "waiting for Let's Encrypt certificates for $domain_name"
+				echo "waiting Let's Encrypt certificates for $domain_name"
 				sleep 5s & wait ${!}
 				if sudo [ -d "./certbot/live/$domain_name" ]; then break; fi
 			done
