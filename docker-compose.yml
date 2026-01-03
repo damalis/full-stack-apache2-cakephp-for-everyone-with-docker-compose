@@ -39,7 +39,7 @@ services:
         labels:
             - 'docker-volume-backup.stop-during-backup=true'
         command: >
-            bash -c "apt-get -y update && sh /tmp/packagecheck.sh 'zip unzip gettext-base' && curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s pdo_mysql intl redis && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && 
+            bash -c "apt-get -y update && sh /tmp/packagecheck.sh 'unzip gettext-base' && curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s pdo_mysql intl redis zip @composer && 
             if [ -f \"${WEBSERVER_DOC_ROOT}/config/app_local.php\" ]; then composer update --prefer-dist cakephp/cakephp:~5.0 --working-dir=${WEBSERVER_DOC_ROOT} --no-interaction --ignore-platform-req=ext-intl; else rm -f ${WEBSERVER_DOC_ROOT}/README.md && composer create-project --prefer-dist cakephp/app:~5.0 ${WEBSERVER_DOC_ROOT} --no-interaction --ignore-platform-req=ext-intl; fi && 
             export RANDOM_VALUE=$(tr -dc '[:alnum:]' </dev/urandom | head -c 32) && sed \"s/__SALT__/$${RANDOM_VALUE}/;1,/localhost/s/localhost/database/;1,/'username' => 'my_app'/s/'username' => 'my_app'/'username' => '$${DB_USER}'/;1,/'password' => 'secret'/s/'password' => 'secret'/'password' => '$${DB_PASSWORD}'/;1,/'database' => 'localhost'/s/'database' => 'my_app'/'database' => '$${DB_NAME}'/\" ${WEBSERVER_DOC_ROOT}/config/app_local.example.php > ${WEBSERVER_DOC_ROOT}/config/app_local.php && 
             grep -qF 'DebugKit.safeTld' ${WEBSERVER_DOC_ROOT}/config/bootstrap.php || echo \"Configure::write('DebugKit.safeTld', ['$$(sed -e 's#.*\\.\\(\\)#\\1#' <<< \"${DOMAIN_NAME}\")']);\" >> ${WEBSERVER_DOC_ROOT}/config/bootstrap.php && grep -qxF 'date.timezone = ${LOCAL_TIMEZONE}' ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini || echo 'date.timezone = ${LOCAL_TIMEZONE}' >> ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini; php-fpm"
@@ -73,13 +73,19 @@ services:
             - '443:443'
         links:
             - cakephp
+        healthcheck:
+            test: ["CMD-SHELL", "/bin/pidof httpd > /dev/null || exit 1"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
         environment:
             TZ: '${LOCAL_TIMEZONE}'
         command: bash -c "sh /tmp/ssl-conf.sh '${DOMAIN_NAME}' '${LETSENCRYPT_CONF_PREFIX}' '${HTTPD_PREFIX}/conf'"
 
     certbot:
         depends_on:
-            - webserver
+            webserver:
+                condition: service_healthy
         image: certbot/certbot:latest
         container_name: certbot
         networks:
@@ -163,8 +169,8 @@ services:
         restart: unless-stopped
         ports:
             - '3306:3306'
-        security_opt:
-            - no-new-privileges:true
+        privileged: true
+        cgroup: host
         healthcheck:
             test: ["CMD-SHELL", "${DATABASE_ADMIN_COMMANDLINE} ping --silent || exit 1"]
             interval: 5s
