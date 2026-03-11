@@ -42,7 +42,7 @@ services:
             bash -c "apt-get -y update && sh /tmp/packagecheck.sh 'unzip gettext-base' && curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s pdo_mysql intl redis zip @composer && 
             if [ -f \"${WEBSERVER_DOC_ROOT}/config/app_local.php\" ]; then composer update --prefer-dist cakephp/cakephp:~5.0 --working-dir=${WEBSERVER_DOC_ROOT} --no-interaction --ignore-platform-req=ext-intl; else rm -f ${WEBSERVER_DOC_ROOT}/README.md && composer create-project --prefer-dist cakephp/app:~5.0 ${WEBSERVER_DOC_ROOT} --no-interaction --ignore-platform-req=ext-intl; fi && 
             export RANDOM_VALUE=$(tr -dc '[:alnum:]' </dev/urandom | head -c 32) && sed \"s/__SALT__/$${RANDOM_VALUE}/;1,/localhost/s/localhost/database/;1,/'username' => 'my_app'/s/'username' => 'my_app'/'username' => '$${DB_USER}'/;1,/'password' => 'secret'/s/'password' => 'secret'/'password' => '$${DB_PASSWORD}'/;1,/'database' => 'localhost'/s/'database' => 'my_app'/'database' => '$${DB_NAME}'/\" ${WEBSERVER_DOC_ROOT}/config/app_local.example.php > ${WEBSERVER_DOC_ROOT}/config/app_local.php && 
-            grep -qF 'DebugKit.safeTld' ${WEBSERVER_DOC_ROOT}/config/bootstrap.php || echo \"Configure::write('DebugKit.safeTld', ['$$(sed -e 's#.*\\.\\(\\)#\\1#' <<< \"${DOMAIN_NAME}\")']);\" >> ${WEBSERVER_DOC_ROOT}/config/bootstrap.php && grep -qxF 'date.timezone = ${LOCAL_TIMEZONE}' ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini || echo 'date.timezone = ${LOCAL_TIMEZONE}' >> ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini; php-fpm"
+            grep -qF 'DebugKit.safeTld' ${WEBSERVER_DOC_ROOT}/config/bootstrap.php || echo \"Configure::write('DebugKit.safeTld', ['$$(sed -e 's#.*\\.\\(\\)#\\1#' <<< \"${DOMAIN_NAME}\")']);\" >> ${WEBSERVER_DOC_ROOT}/config/bootstrap.php && TMP=$$(mktemp) && grep -vF 'date.timezone' ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini > $$TMP && echo 'date.timezone = ${LOCAL_TIMEZONE}' >> $$TMP && cp $$TMP ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini; php-fpm"
 
     webserver:
         depends_on:
@@ -56,11 +56,11 @@ services:
         volumes:
             - 'html:${WEBSERVER_DOC_ROOT}'
             - type: bind
-              source: ./webserver
+              source: ./webserver/conf
               target: '${HTTPD_PREFIX}/conf'
             - type: bind
-              source: ./webserver/ssl-option/options-ssl-apache.conf
-              target: '${LETSENCRYPT_CONF_PREFIX}/options-ssl-apache.conf'
+              source: ./webserver/ssl-option/options-ssl-apache-webserver.conf
+              target: '${LETSENCRYPT_CONF_PREFIX}/options-ssl-apache-webserver.conf'
             - type: bind
               source: ./ssl-conf.sh
               target: '/tmp/ssl-conf.sh'
@@ -77,7 +77,7 @@ services:
             test: ["CMD-SHELL", "/bin/pidof httpd > /dev/null || exit 1"]
             interval: 10s
             timeout: 5s
-            retries: 5
+            retries: 10
         environment:
             TZ: '${LOCAL_TIMEZONE}'
         command: bash -c "sh /tmp/ssl-conf.sh '${DOMAIN_NAME}' '${LETSENCRYPT_CONF_PREFIX}' '${HTTPD_PREFIX}/conf'"
@@ -115,20 +115,23 @@ services:
             - frontend
         volumes:
             - type: bind
-              source: ./phpmyadmin/apache2/sites-available/default-ssl.conf
-              target: '${APACHE_CONFDIR_PREFIX}/sites-available/default-ssl.conf'
+              source: ./phpmyadmin/apache2/sites-available/default-ssl.sample.conf
+              target: '${APACHE_CONFDIR_PREFIX}/sites-available/default-ssl.sample.conf'
             - type: bind
               source: ./phpmyadmin/apache2/ports.conf
               target: '${APACHE_CONFDIR_PREFIX}/ports.conf'
             - type: bind
-              source: ./phpmyadmin/ssl-option/options-ssl-apache.conf
-              target: '${LETSENCRYPT_CONF_PREFIX}/options-ssl-apache.conf'
+              source: ./phpmyadmin/ssl-option/options-ssl-apache-phpmyadmin.conf
+              target: '${LETSENCRYPT_CONF_PREFIX}/options-ssl-apache-phpmyadmin.conf'
             - type: bind
               source: ./phpmyadmin/config.user.inc.php
               target: '${PMA_CONF_FOLDER}/config.user.inc.php'
             - type: bind
               source: ./phpmyadmin/php/conf.d/security.ini
               target: '${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini'
+            - type: bind
+              source: ./packagecheck.sh
+              target: '/tmp/packagecheck.sh'
             - 'certbot-etc:${LETSENCRYPT_CONF_PREFIX}'
         hostname: phpmyadmin
         restart: unless-stopped
@@ -146,11 +149,11 @@ services:
             MEMORY_LIMIT: '${PMA_MEMORY_LIMIT}'
             TZ: '${LOCAL_TIMEZONE}'
         command: >
-            bash -c "echo ${PMA_HTPASSWD_USERNAME}:phpmyadmin:$$( printf \"%s:%s:%s\" \"${PMA_HTPASSWD_USERNAME}\" \"phpmyadmin\" \"${PMA_HTPASSWD_PASSWORD}\" | md5sum | awk '{print $$1}' ) > ${PMA_CONF_FOLDER}/.htpasswd 
+            bash -c "apt-get update && sh /tmp/packagecheck.sh 'gettext-base' && echo ${PMA_HTPASSWD_USERNAME}:phpmyadmin:$$( printf \"%s:%s:%s\" \"${PMA_HTPASSWD_USERNAME}\" \"phpmyadmin\" \"${PMA_HTPASSWD_PASSWORD}\" | md5sum | awk '{print $$1}' ) > ${PMA_CONF_FOLDER}/.htpasswd 
             && printf 'AuthType Digest\\nAuthName \"phpmyadmin\"\\nAuthDigestProvider file\\nAuthUserFile ${PMA_CONF_FOLDER}/.htpasswd\\nRequire valid-user\\n' > /var/www/html/.htaccess && a2enmod auth_digest; 
             mkdir -p /var/www/html/../upload && chown www-data:www-data /var/www/html/../upload && chmod a+w /var/www/html/../upload; mkdir -p /var/www/html/../save && chown www-data:www-data /var/www/html/../save && chmod a+w /var/www/html/../save; 
-            grep -qxF 'ServerName 127.0.0.1' ${APACHE_CONFDIR_PREFIX}/apache2.conf || echo -e '\\nServerName 127.0.0.1' >> ${APACHE_CONFDIR_PREFIX}/apache2.conf; grep -qxF 'date.timezone = ${LOCAL_TIMEZONE}' ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini || echo 'date.timezone = ${LOCAL_TIMEZONE}' >> ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini; 
-            a2enmod ssl && a2ensite default-ssl && a2dissite 000-default && /docker-entrypoint.sh 'apache2-foreground'"
+            grep -qxF 'ServerName 127.0.0.1' ${APACHE_CONFDIR_PREFIX}/apache2.conf || echo -e '\\nServerName 127.0.0.1' >> ${APACHE_CONFDIR_PREFIX}/apache2.conf; TMP=$$(mktemp) && grep -vF 'date.timezone' ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini > $$TMP && echo 'date.timezone = ${LOCAL_TIMEZONE}' >> $$TMP && cp $$TMP ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini; 
+            export DOMAIN_NAME=${DOMAIN_NAME} && envsubst '$$DOMAIN_NAME' < ${APACHE_CONFDIR_PREFIX}/sites-available/default-ssl.sample.conf > ${APACHE_CONFDIR_PREFIX}/sites-available/default-ssl.conf && a2enmod ssl && a2ensite default-ssl && a2dissite 000-default && /docker-entrypoint.sh 'apache2-foreground'"
 
     database:
         image: ${DATABASE_IMAGE_NAME}:${DATABASE_VERSION}
